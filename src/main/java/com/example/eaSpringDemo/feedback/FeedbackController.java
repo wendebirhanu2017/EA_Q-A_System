@@ -60,12 +60,14 @@ public class FeedbackController {
 
     }
 
-    @GetMapping(value = "/template/user")
-    public String getProductList() {
+    @GetMapping(value = "/user")
+    public User getProductList() {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         HttpEntity<String> entity = new HttpEntity<String>(headers);
-
-        return restTemplate.exchange("http://localhost:8082/api/v1/student/", HttpMethod.GET, entity, String.class).getBody();
+int id = 1;
+        User user=  restTemplate.getForObject("http://localhost:8082/api/v1/student/"+id, User.class);
+        return user;
+//        return restTemplate.exchange("http://localhost:8082/api/v1/student/", HttpMethod.GET, entity, String.class).getBody();
     }
 }

@@ -1,7 +1,10 @@
 package com.example.eaSpringDemo.feedback;
 
 
+import jdk.jfr.consumer.RecordedStackTrace;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -29,10 +32,10 @@ public class FeedbackService {
     public void deleteFeedback(Long feedbackId) {
         boolean exists = feedbackRepository.existsById(feedbackId);
         if(!exists){
-            throw new IllegalStateException("feedback with answer id " + feedbackId + " dose not exist");
+            throw new FeedbackNotFoundException(feedbackId);
         }
-        feedbackRepository.deleteById(feedbackId);
 
+        feedbackRepository.deleteById(feedbackId);
     }
 
     public Feedback updateFeedback(Feedback newFeedback,Long feedbackId, Long userId, Long answerId) {
@@ -51,10 +54,13 @@ public class FeedbackService {
     }
 
     public void deleteFeedbackByQuestionId(Long answerId) {
-        boolean exists = feedbackRepository.existsByAnswerId(answerId);
-        if(!exists){
-            throw new IllegalStateException("feedback with answer id " + answerId + " dose not exist");
-        }
-        feedbackRepository.deleteByAnswerId(answerId);
+      List<Feedback> feedbacks = feedbackRepository.findByAnswerId(answerId).orElseThrow(()->new IllegalStateException(
+              "feedback with answer id " + answerId + " dose not exist"));
+      if(!feedbacks.isEmpty()){
+          for(Feedback f:feedbacks){
+              feedbackRepository.deleteById(f.getId());
+          }
+      }
+
     }
 }

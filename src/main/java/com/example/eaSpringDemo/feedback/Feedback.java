@@ -7,8 +7,7 @@ import java.time.LocalDate;
 
 
 @Entity
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Feedback {

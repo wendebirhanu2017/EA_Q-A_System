@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
   Optional<List<Feedback>> findByAnswerId(Long answerId);
 
